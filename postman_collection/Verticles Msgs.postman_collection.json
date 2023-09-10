@@ -1,0 +1,39 @@
+{
+	"info": {
+		"_postman_id": "3c10efa0-71a6-4740-9ec9-87c2e3946249",
+		"name": "Verticles Msgs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23300076"
+	},
+	"item": [
+		{
+			"name": "post_message",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"message_content\": \"sa7 edda7 emboooo\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/egypt/messages",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"egypt",
+						"messages"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -4,19 +4,30 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.json.JsonObject;
-import java.time.Duration;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.handler.BodyHandler;
 
 public class PublishVerticle extends AbstractVerticle {
-    static final String ADDRESS = "my.address";
+  static final String ADDRESS = "my.address";
 
-    public void start(final Promise<Void> startPromise) throws Exception {
-      startPromise.complete();
+  public void start(final Promise<Void> startPromise) throws Exception {
+    Router router = Router.router(vertx);
+
+    // Body handler for parsing request bodies
+    router.route().handler(BodyHandler.create());
+
+    // POST endpoint for creating new items
+    router.post("/egypt/messages").handler(rc -> {
+      JsonObject message = rc.getBodyAsJson();
+      JsonObject msgInput = message.put("message_from", PublishVerticle.class.getSimpleName());
+
+      // Send the item to the other verticle
       EventBus eventBus = vertx.eventBus();
-      final JsonObject message = new JsonObject()
-        .put("message_content", "Sa7 Edda7 Emboo")
-        .put("message_from", PublishVerticle.class.getSimpleName());
-      vertx.setPeriodic(Duration.ofSeconds(10).toMillis(), id -> {
-        eventBus.<JsonObject>publish(ADDRESS, message);
-      });
-    }
+      eventBus.send(ADDRESS, msgInput);
+
+      rc.response().end();
+    });
+
+    vertx.createHttpServer().requestHandler(router).listen(8080);
+  }
   }
